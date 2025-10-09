@@ -1,0 +1,79 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Inscription</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="username" class="form-label">Nom d'utilisateur</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                [(ngModel)]="user.username"
+                required
+                placeholder="Entrez votre nom d'utilisateur"
+              />
+              <div class="invalid-feedback">Le nom d'utilisateur est requis.</div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                [(ngModel)]="user.email"
+                required
+                placeholder="Entrez votre email"
+              />
+              <div class="invalid-feedback">Un email valide est requis.</div>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Mot de passe</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                [(ngModel)]="user.password"
+                required
+                placeholder="Entrez votre mot de passe"
+              />
+              <div class="invalid-feedback">Le mot de passe est requis.</div>
+            </div>
+            <div class="mb-3">
+              <label for="role" class="form-label">Rôle</label>
+              <select
+                class="form-select"
+                id="role"
+                name="role"
+                [(ngModel)]="user.role"
+              >
+                <option value="ROLE_USER">Utilisateur</option>
+                <option value="ROLE_MANAGER">Manager</option>
+                <option value="ROLE_ADMIN">Administrateur</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="isSubmitting"
+            >
+              {{ isSubmitting ? 'Inscription en cours...' : 'S\'inscrire' }}
+            </button>
+            <p *ngIf="successMessage" class="text-success mt-3">{{ successMessage }}</p>
+            <p *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <p class="mb-0">Déjà inscrit ? <a routerLink="/login" class="text-primary">Se connecter</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

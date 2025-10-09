@@ -1,0 +1,334 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/manager/dashboard">SB Admin - Manager</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/manager/vehicles">Véhicules</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/manager/fuel-consumptions">Ravitaillements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/manager/drivers">Conducteurs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" (click)="logout()">Déconnexion</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Contenu principal -->
+<div class="container mt-4 p-3">
+  <h2 class="text-primary mb-4">Gestion des Conducteurs</h2>
+
+<!-- Ajouter un nouveau conducteur -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-success text-white text-center">
+    <h5 class="mb-0">Ajouter un Nouveau Conducteur</h5>
+  </div>
+  <div class="card-body p-4">
+    <form #addForm="ngForm" (ngSubmit)="addDriver()" class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col">
+        <div class="form-group">
+          <label for="firstName" class="form-label fw-bold text-primary">Prénom <span class="text-danger">*</span></label>
+          <input
+            id="firstName"
+            [(ngModel)]="newDriver.firstName"
+            name="firstName"
+            placeholder="Prénom"
+            class="form-control border-primary"
+            required
+            #firstName="ngModel"
+            [class.is-invalid]="firstName.invalid && firstName.touched"
+          >
+          <div class="invalid-feedback" *ngIf="firstName.invalid && firstName.touched">
+            Le prénom est requis.
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="lastName" class="form-label fw-bold text-primary">Nom <span class="text-danger">*</span></label>
+          <input
+            id="lastName"
+            [(ngModel)]="newDriver.lastName"
+            name="lastName"
+            placeholder="Nom"
+            class="form-control border-primary"
+            required
+            #lastName="ngModel"
+            [class.is-invalid]="lastName.invalid && lastName.touched"
+          >
+          <div class="invalid-feedback" *ngIf="lastName.invalid && lastName.touched">
+            Le nom est requis.
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="email" class="form-label fw-bold text-primary">Email <span class="text-danger">*</span></label>
+          <input
+            id="email"
+            [(ngModel)]="newDriver.email"
+            name="email"
+            placeholder="Email"
+            type="email"
+            class="form-control border-primary"
+            required
+            #email="ngModel"
+            [class.is-invalid]="email.invalid && email.touched"
+          >
+          <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+            Un email valide est requis.
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="phone" class="form-label fw-bold text-primary">Téléphone <span class="text-danger">*</span></label>
+          <input
+            id="phone"
+            [(ngModel)]="newDriver.phone"
+            name="phone"
+            placeholder="Téléphone"
+            class="form-control border-primary"
+            required
+            #phone="ngModel"
+            [class.is-invalid]="phone.invalid && phone.touched"
+          >
+          <div class="invalid-feedback" *ngIf="phone.invalid && phone.touched">
+            Un numéro de téléphone est requis.
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-2">
+        <div class="form-group">
+          <label for="vehicleId" class="form-label fw-bold text-primary">Véhicule</label>
+          <select
+            id="vehicleId"
+            [(ngModel)]="newDriver.vehicleId"
+            name="vehicleId"
+            class="form-control border-primary"
+          >
+            <option [ngValue]="undefined">Aucun véhicule</option>
+            <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+              {{ vehicle.licensePlate }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-2">
+        <div class="form-group">
+          <label for="password" class="form-label fw-bold text-primary">Mot de passe <span class="text-danger">*</span></label>
+          <input
+            id="password"
+            [(ngModel)]="newDriver.password"
+            name="password"
+            placeholder="Mot de passe"
+            type="password"
+            class="form-control border-primary"
+            required
+            #password="ngModel"
+            [class.is-invalid]="password.invalid && password.touched"
+          >
+          <div class="invalid-feedback" *ngIf="password.invalid && password.touched">
+            Le mot de passe est requis.
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-2 d-flex align-items-end">
+        <button
+          type="submit"
+          class="btn btn-success w-100 py-2"
+          [disabled]="addForm.invalid"
+          aria-label="Ajouter un conducteur"
+        >
+          <i class="bi bi-plus-lg me-2"></i>Ajouter
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <!-- Lister les conducteurs -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Liste des Conducteurs</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Prénom</th>
+              <th scope="col">Nom</th>
+              <th scope="col">Email</th>
+              <th scope="col">Téléphone</th>
+              <th scope="col">Véhicule</th>
+              <th scope="col" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let driver of drivers" class="align-middle">
+              <td>{{ driver.firstName }}</td>
+              <td>{{ driver.lastName }}</td>
+              <td>{{ driver.email }}</td>
+              <td>{{ driver.phone }}</td>
+              <td>{{ getVehiclePlate(driver.vehicleId) }}</td>
+              <td class="text-center">
+                <button
+                  class="btn btn-warning btn-sm me-2"
+                  (click)="editDriver(driver)"
+                  aria-label="Modifier ce conducteur"
+                >
+                 <i class="bi bi-pen-fill"></i>
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteDriver(driver.id)"
+                  aria-label="Supprimer ce conducteur"
+                >
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Formulaire de modification -->
+      <div *ngIf="editingDriver" class="mt-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Modifier un Conducteur</h5>
+          </div>
+          <div class="card-body">
+            <form #editForm="ngForm" (ngSubmit)="updateDriver()" class="row g-3">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="editFirstName" class="form-label">Prénom <span class="text-danger">*</span></label>
+                  <input
+                    id="editFirstName"
+                    [(ngModel)]="editingDriver.firstName"
+                    name="editFirstName"
+                    placeholder="Prénom"
+                    class="form-control mb-2"
+                    required
+                    #editFirstName="ngModel"
+                    [class.is-invalid]="editFirstName.invalid && editFirstName.touched"
+                  >
+                  <div class="invalid-feedback" *ngIf="editFirstName.invalid && editFirstName.touched">
+                    Le prénom est requis.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="editLastName" class="form-label">Nom <span class="text-danger">*</span></label>
+                  <input
+                    id="editLastName"
+                    [(ngModel)]="editingDriver.lastName"
+                    name="editLastName"
+                    placeholder="Nom"
+                    class="form-control mb-2"
+                    required
+                    #editLastName="ngModel"
+                    [class.is-invalid]="editLastName.invalid && editLastName.touched"
+                  >
+                  <div class="invalid-feedback" *ngIf="editLastName.invalid && editLastName.touched">
+                    Le nom est requis.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="editEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                  <input
+                    id="editEmail"
+                    [(ngModel)]="editingDriver.email"
+                    name="editEmail"
+                    placeholder="Email"
+                    type="email"
+                    class="form-control mb-2"
+                    required
+                    #editEmail="ngModel"
+                    [class.is-invalid]="editEmail.invalid && editEmail.touched"
+                  >
+                  <div class="invalid-feedback" *ngIf="editEmail.invalid && editEmail.touched">
+                    Un email valide est requis.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="editPhone" class="form-label">Téléphone <span class="text-danger">*</span></label>
+                  <input
+                    id="editPhone"
+                    [(ngModel)]="editingDriver.phone"
+                    name="editPhone"
+                    placeholder="Téléphone"
+                    class="form-control mb-2"
+                    required
+                    #editPhone="ngModel"
+                    [class.is-invalid]="editPhone.invalid && editPhone.touched"
+                  >
+                  <div class="invalid-feedback" *ngIf="editPhone.invalid && editPhone.touched">
+                    Un numéro de téléphone est requis.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <div class="form-group">
+                  <label for="editVehicleId" class="form-label">Véhicule</label>
+                  <select
+                    id="editVehicleId"
+                    [(ngModel)]="editingDriver.vehicleId"
+                    name="editVehicleId"
+                    class="form-control mb-2"
+                  >
+                    <option [ngValue]="undefined">Aucun véhicule</option>
+                    <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">
+                      {{ vehicle.licensePlate }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-1 d-flex flex-column gap-2">
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100"
+                  [disabled]="editForm.invalid"
+                  aria-label="Sauvegarder les modifications"
+                >
+                  Sauvegarder
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary w-100"
+                  (click)="editingDriver = null"
+                  aria-label="Annuler les modifications"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+    {{ errorMessage }}
+  </div>
+</div>

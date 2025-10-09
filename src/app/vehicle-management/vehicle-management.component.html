@@ -1,0 +1,165 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/manager/dashboard">SB Admin - Manager</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page"  routerLink="/manager/vehicles">Véhicules</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link "  routerLink="/manager/fuel-consumptions">Ravitaillements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link "  routerLink="/manager/drivers">Conducteurs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" (click)="logout()">Déconnexion </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Gestion des Véhicules</h2>
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <!-- Form -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">Formulaire du véhicule</div>
+    <div class="card-body">
+      <form #vehicleForm="ngForm" (ngSubmit)="createOrUpdateVehicle()" class="row g-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="licensePlate" class="form-label">Plaque d'immatriculation</label>
+            <input type="text" class="form-control" id="licensePlate" name="licensePlate" [(ngModel)]="selectedVehicle.licensePlate" required>
+            <div *ngIf="formErrors['licensePlate']" class="text-danger">{{ formErrors['licensePlate'] }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="brand" class="form-label">Marque</label>
+            <input type="text" class="form-control" id="brand" name="brand" [(ngModel)]="selectedVehicle.brand" required>
+            <div *ngIf="formErrors['brand']" class="text-danger">{{ formErrors['brand'] }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="model" class="form-label">Modèle</label>
+            <input type="text" class="form-control" id="model" name="model" [(ngModel)]="selectedVehicle.model" required>
+            <div *ngIf="formErrors['model']" class="text-danger">{{ formErrors['model'] }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="fuelType" class="form-label">Type de carburant</label>
+            <select class="form-control" id="fuelType" name="fuelType" [(ngModel)]="selectedVehicle.fuelType" required>
+              <option value="" disabled>Sélectionner un type</option>
+              <option value="Essence">Essence</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Électrique">Électrique</option>
+              <option value="Hybride">Hybride</option>
+            </select>
+            <div *ngIf="formErrors['fuelType']" class="text-danger">{{ formErrors['fuelType'] }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="year" class="form-label">Année</label>
+            <input type="number" class="form-control" id="year" name="year" [(ngModel)]="selectedVehicle.year" required>
+            <div *ngIf="formErrors['year']" class="text-danger">{{ formErrors['year'] }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="client" class="form-label">Client</label>
+            <select class="form-control" id="client" name="client" [(ngModel)]="selectedClientId" required>
+              <option value="" disabled>Sélectionner un client</option>
+              <option *ngFor="let client of clients" [value]="client.id">{{ client.companyName }}</option>
+            </select>
+            <div *ngIf="formErrors['client']" class="text-danger">{{ formErrors['client'] }}</div>
+          </div>
+        </div>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary me-2" [disabled]="!vehicleForm.valid">{{ isEditing ? 'Mettre à jour' : 'Ajouter' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="card mb-4">
+    <div class="card-header bg-secondary text-white">Filtres et Recherche</div>
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="searchQuery" class="form-label">Rechercher :</label>
+            <input type="text" class="form-control" id="searchQuery" [(ngModel)]="searchQuery" (input)="searchVehicles()" placeholder="Rechercher par plaque, marque, modèle ou carburant">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="sort-buttons">
+            <button class="btn btn-outline-primary me-2" (click)="sortVehicles('asc')">Trier A-Z</button>
+            <button class="btn btn-outline-primary me-2" (click)="sortVehicles('desc')">Trier Z-A</button>
+            <button class="btn btn-outline-secondary" (click)="resetFilters()">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle List -->
+  <div class="card">
+    <div class="card-header bg-info text-white">Liste des Véhicules</div>
+    <div class="card-body">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Plaque</th>
+            <th>Marque</th>
+            <th>Modèle</th>
+            <th>Carburant</th>
+            <th>Année</th>
+            <th>Client</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vehicle of filteredVehicles" class="table-row">
+            <td>{{ vehicle.id }}</td>
+            <td>{{ vehicle.licensePlate }}</td>
+            <td>{{ vehicle.brand }}</td>
+            <td>{{ vehicle.model }}</td>
+            <td>{{ vehicle.fuelType }}</td>
+            <td>{{ vehicle.year }}</td>
+            <td>{{ vehicle.client?.companyName || 'N/A' }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2" (click)="selectVehicle(vehicle)"><i class="bi bi-pen-fill"></i></button>
+              <button class="btn btn-danger btn-sm" (click)="deleteVehicle(vehicle.id!)"><i class="bi bi-trash-fill"></i></button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredVehicles.length === 0" class="text-center">
+            <td colspan="8">Aucun véhicule trouvé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

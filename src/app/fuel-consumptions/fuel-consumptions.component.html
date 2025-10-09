@@ -1,0 +1,185 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/manager/dashboard">SB Admin - Manager</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/manager/vehicles">Véhicules</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/manager/fuel-consumptions">Ravitaillements</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link "  routerLink="/manager/drivers">Conducteurs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" (click)="logout()">Déconnexion </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid mt-4">
+  <h2>Ravitaillements</h2>
+
+  <!-- Filtres -->
+  <div class="card mb-4">
+    <div class="card-header">Filtres</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <label for="vehicleId">ID Véhicule</label>
+          <select id="vehicleId" [(ngModel)]="filters.vehicleId" name="vehicleId" class="form-control" (ngModelChange)="applyFilters()">
+            <option value="">Tous</option>
+            <option *ngFor="let v of vehicles" [value]="v.id">{{ v.id }} ({{ v.fuelType }})</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="fuelType">Type de carburant</label>
+          <select id="fuelType" [(ngModel)]="filters.fuelType" name="fuelType" class="form-control" (ngModelChange)="applyFilters()">
+            <option value="">Tous</option>
+            <option value="Essence">Essence</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Électrique">Électrique</option>
+            <option value="Hybride">Hybride</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="startDate">Date de début</label>
+          <input id="startDate" [(ngModel)]="filters.startDate" name="startDate" type="datetime-local" class="form-control" (ngModelChange)="applyFilters()" />
+        </div>
+        <div class="col-md-3">
+          <label for="endDate">Date de fin</label>
+          <input id="endDate" [(ngModel)]="filters.endDate" name="endDate" type="datetime-local" class="form-control" (ngModelChange)="applyFilters()" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire d'ajout/modification -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>{{ isEditing ? 'Modifier ravitaillement' : 'Ajouter un ravitaillement' }}</h5>
+    </div>
+    <div class="card-body">
+      <form #fuelForm="ngForm" (ngSubmit)="isEditing ? updateFuelConsumption() : addFuelConsumption()" class="row">
+        <div class="col-md-3">
+          <label for="vehicleIdForm">ID Véhicule</label>
+          <select id="vehicleIdForm" name="vehicleId" [(ngModel)]="newFuelConsumption.vehicleId" class="form-control" required>
+            <option value="">Sélectionner un véhicule</option>
+            <option *ngFor="let v of vehicles" [value]="v.id">{{ v.id }} ({{ v.fuelType }})</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="fuelTypeForm">Type de carburant</label>
+          <select id="fuelTypeForm" name="fuelType" [(ngModel)]="newFuelConsumption.fuelType" class="form-control" required>
+            <option value="">Sélectionner</option>
+            <option value="Essence">Essence</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Électrique">Électrique</option>
+            <option value="Hybride">Hybride</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="quantityForm">Quantité</label>
+          <input id="quantityForm" name="quantity" [(ngModel)]="newFuelConsumption.quantity" class="form-control" type="number" step="0.1" required />
+        </div>
+        <div class="col-md-3">
+          <label for="costForm">Coût</label>
+          <input id="costForm" name="cost" [(ngModel)]="newFuelConsumption.cost" class="form-control" type="number" step="0.01" required />
+        </div>
+        <div class="col-md-3">
+          <label for="refuelDateForm">Date</label>
+          <input id="refuelDateForm" name="refuelDate" [(ngModel)]="newFuelConsumption.refuelDate" class="form-control" type="datetime-local" required />
+        </div>
+        <div class="col-md-3">
+          <label for="odometerForm">Odomètre (km)</label>
+          <input id="odometerForm" name="odometerReading" [(ngModel)]="newFuelConsumption.odometerReading" class="form-control" type="number" step="0.1" required />
+        </div>
+        <div class="col-md-6 mt-3">
+          <button type="submit" class="btn btn-primary" [disabled]="!fuelForm.valid">
+            {{ isEditing ? 'Modifier' : 'Ajouter' }}
+          </button>
+          <button type="button" class="btn btn-secondary ml-2" (click)="resetForm()">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tableau des ravitaillements -->
+  <div class="card">
+    <div class="card-header">Liste des ravitaillements</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Véhicule ID</th>
+            <th>Type de carburant</th>
+            <th>Quantité</th>
+            <th>Coût</th>
+            <th>Date</th>
+            <th>Odomètre (km)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fc of fuelConsumptions">
+            <td>{{ fc.id }}</td>
+            <td>{{ fc.vehicleId }}</td>
+            <td>{{ fc.fuelType }}</td>
+            <td>{{ fc.quantity }} {{ fc.fuelType === 'Électrique' ? 'kWh' : 'litres' }}</td>
+            <td>{{ fc.cost || 0 }} €</td>
+            <td>{{ fc.refuelDate | date:'short' }}</td>
+            <td>{{ fc.odometerReading || 0 }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm mr-2" (click)="editFuelConsumption(fc.id)" *ngIf="fc.id"> <i class="bi bi-pen-fill"></i></button>
+              <button class="btn btn-danger btn-sm" (click)="deleteFuelConsumption(fc.id)" *ngIf="fc.id"><i class="bi bi-trash-fill"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    </div>
+  </div>
+
+  <!-- Section de prédiction -->
+  <div class="card mt-4">
+    <div class="card-header">Prédire la consommation</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="distanceKm">Distance (km)</label>
+          <input id="distanceKm" [(ngModel)]="distanceKm" name="distanceKm" type="number" class="form-control" required />
+        </div>
+        <div class="col-md-4">
+          <label for="fuelTypePredict">Type de carburant</label>
+          <select id="fuelTypePredict" [(ngModel)]="newFuelConsumption.fuelType" name="fuelTypePredict" class="form-control" required>
+            <option value="">Sélectionner</option>
+            <option value="Essence">Essence</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Électrique">Électrique</option>
+            <option value="Hybride">Hybride</option>
+          </select>
+        </div>
+        <div class="col-md-4 align-self-end">
+          <button class="btn btn-info" (click)="predictConsumption()" [disabled]="!distanceKm || !newFuelConsumption.fuelType">Prédire</button>
+        </div>
+      </div>
+      <div class="mt-3" *ngIf="predictedConsumption">
+        <p class="alert alert-success">Consommation estimée : {{ predictedConsumption }} {{ newFuelConsumption.fuelType === 'Électrique' ? 'kWh' : 'litres' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

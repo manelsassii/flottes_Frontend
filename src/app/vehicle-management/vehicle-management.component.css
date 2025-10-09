@@ -1,0 +1,168 @@
+.card {
+  border-radius: 0.5rem;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.navbar-nav .nav-link.active {
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 0.25rem;
+}
+
+.navbar-nav .nav-link {
+  color: #ccc;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #fff;
+}
+body {
+  background-color: #f0f2f5;
+  margin: 0;
+}
+
+.navbar {
+  padding: 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-link {
+  color: #fff !important;
+  margin-left: 1rem;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #ddd !important;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: none;
+  padding: 1rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn {
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.table-row:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.alert-dismissible .btn-close {
+  padding: 0.5rem 0.75rem;
+}
+
+.filter-section {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .row {
+    flex-direction: column;
+  }
+  .col-md-6 {
+    width: 100%;
+  }
+  .filter-section {
+    flex-direction: column;
+  }
+}

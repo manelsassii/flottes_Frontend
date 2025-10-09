@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Connexion Conducteur</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding background-gradient">
+  <div class="login-container">
+    <ion-card class="login-card">
+      <ion-card-header>
+        <ion-card-title class="text-center">Bienvenue</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
+          <ion-item lines="full" class="rounded-input">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              required
+              email
+              placeholder="Entrez votre email"
+            ></ion-input>
+          </ion-item>
+          <ion-item lines="full" class="rounded-input">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              placeholder="Entrez votre mot de passe"
+            ></ion-input>
+          </ion-item>
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="loginForm.invalid"
+            class="custom-button"
+          >
+            Se connecter
+          </ion-button>
+          <p class="ion-text-center ion-margin-top">
+            <a routerLink="/forgot-password" class="forgot-password">Mot de passe oublié ?</a>
+          </p>
+        </form>
+      </ion-card-content>
+    </ion-card>
+    <p class="text-center ion-margin-top footer-text">
+      Pas encore de compte ? <a routerLink="/register">Inscrivez-vous</a>
+    </p>
+  </div>
+</ion-content>
