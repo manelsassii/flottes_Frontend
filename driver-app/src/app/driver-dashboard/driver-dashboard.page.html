@@ -1,18 +1,18 @@
+<!-- src/app/driver-dashboard/driver-dashboard.page.html -->
 <ion-header>
   <ion-toolbar color="primary">
-    <!-- Navbar SB Admin 2 adaptée à Ionic -->
     <div class="sb-nav-fixed">
       <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+        <ion-buttons slot="start">
+          <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+        </ion-buttons>
         <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" (click)="toggleSidebar()">
-          <i class="fas fa-bars"></i>
-        </button>
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <ul class="navbar-nav ms-auto me-3">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
               <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
             </ul>
           </li>
@@ -22,242 +22,124 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding dashboard-content sb-sidenav-toggled">
-  <!-- Sidebar SB Admin 2 (adaptée à ion-menu) -->
-  <ion-menu contentId="main-content" type="overlay" side="start">
-    <ion-content>
-      <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        <div class="sb-sidenav-menu">
-          <div class="nav">
-            <a class="nav-link" routerLink="/driver-dashboard">
-              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-              Tableau de bord
-            </a>
-            <a class="nav-link" routerLink="/stats">
-              <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
-              Statistiques
-            </a>
-            <a class="nav-link" routerLink="/alerts">
-              <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
-              Alertes
-            </a>
-            <a class="nav-link" routerLink="/history">
-              <div class="sb-nav-link-icon"><i class="fas fa-history"></i></div>
-              Historique
-            </a>
-          </div>
-        </div>
-      </nav>
-    </ion-content>
-  </ion-menu>
+<ion-content class="ion-padding" >
 
-  <ion-router-outlet id="main-content"></ion-router-outlet>
+ 
 
-  <ion-content id="main-content">
-    <div id="layoutSidenav_content">
-      <main>
-        <div class="container-fluid px-4">
-          <h1 class="mt-4">Vue d'ensemble</h1>
-          <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Dashboard</li>
-          </ol>
-          <div class="row">
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Consommation récente</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">50L cette semaine</div>
-                    </div>
-                    <div class="col-auto">
-                      <ion-icon name="flame" class="stat-icon text-primary"></ion-icon>
-                    </div>
+  <!-- CONTENU DASHBOARD -->
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4 h3 text-primary">Tableau de bord</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+
+        <!-- CARTES RAPIDES -->
+        <div class="row g-3 mb-5">
+          <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-left-primary shadow h-100">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Consommation récente</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">50 L</div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Statut du véhicule</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Alerte</div>
-                    </div>
-                    <div class="col-auto">
-                      <ion-icon name="warning" class="stat-icon text-warning"></ion-icon>
-                    </div>
+                  <div class="col-auto">
+                    <ion-icon name="flame" class="text-primary" size="large"></ion-icon>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-line me-1"></i> Progression de consommation
-            </div>
-            <div class="card-body">
-              <ion-progress-bar color="danger" value="0.7" buffer="1" class="progress-bar"></ion-progress-bar>
-              <p class="progress-note">70% de la limite atteinte</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="container-fluid px-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-gas-pump me-1"></i> Enregistrement rapide
-            </div>
-            <div class="card-body">
-              <form #enregistrerForm="ngForm">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                      <ion-input type="number" name="quantity" [(ngModel)]="fuelQuantity" placeholder="Quantité (L)" required min="1" class="form-control"></ion-input>
-                      <label for="quantity">Quantité (L)</label>
-                      <div class="invalid-feedback" *ngIf="fuelQuantity <= 0">Doit être supérieur à 0</div>
-                    </div>
+          <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-left-warning shadow h-100">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Statut du véhicule</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">Alerte</div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                      <ion-datetime name="date" [(ngModel)]="fuelDate" displayFormat="YYYY-MM-DD" placeholder="Date" class="form-control"></ion-datetime>
-                      <label for="date">Date</label>
-                    </div>
+                  <div class="col-auto">
+                    <ion-icon name="warning" class="text-warning" size="large"></ion-icon>
                   </div>
-                </div>
-                <ion-button expand="block" color="success" (click)="recordFuelConsumption(enregistrerForm)" [disabled]="!enregistrerForm.valid || fuelQuantity <= 0" class="btn btn-success">
-                  <ion-icon name="save"></ion-icon> Enregistrer
-                </ion-button>
-              </form>
-              <div class="text-success mt-2" *ngIf="isSuccess">Enregistrement réussi !</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="container-fluid px-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-exclamation-triangle me-1"></i> Signaler une anomalie
-            </div>
-            <div class="card-body">
-              <form #anomalyForm="ngForm">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                      <ion-input type="text" name="description" [(ngModel)]="anomalyMessage" placeholder="Description" required class="form-control"></ion-input>
-                      <label for="description">Description</label>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                      <ion-select [(ngModel)]="anomalyType" name="type" class="form-control">
-                        <ion-select-option value="Panne">Panne</ion-select-option>
-                        <ion-select-option value="Consommation inhabituelle">Consommation inhabituelle</ion-select-option>
-                      </ion-select>
-                      <label for="type">Type</label>
-                    </div>
-                  </div>
-                </div>
-                <ion-button expand="block" color="warning" (click)="reportAnomaly(anomalyForm)" [disabled]="!anomalyForm.valid || !anomalyMessage" class="btn btn-warning">
-                  <ion-icon name="warning"></ion-icon> Signaler
-                </ion-button>
-              </form>
-              <div class="text-success mt-2" *ngIf="anomalySuccess">Anomalie signalée avec succès !</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="container-fluid px-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-bar me-1"></i> Statistiques personnelles
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="mb-2">Moyenne : <strong>8L/100km</strong></p>
-                  <p class="mb-0">Objectif : <strong>+10% au-dessus</strong></p>
-                </div>
-                <div class="col-md-6">
-                  <canvas #consumptionChart class="chart-container"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="container-fluid px-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-bell me-1"></i> Alertes et notifications <span class="badge bg-danger">{{ alerts.length }}</span>
+        <!-- ENREGISTREMENT RAPIDE -->
+        <div class="row">
+          <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-header bg-success text-white">
+                <i class="fas fa-gas-pump me-2"></i> Enregistrement rapide
+              </div>
+              <div class="card-body">
+                <form #enregistrerForm="ngForm" class="row g-3">
+                  <div class="col-md-4">
+                    <ion-input type="number" [(ngModel)]="fuelQuantity" name="quantity" required min="1" placeholder="Quantité (L)" class="form-control"></ion-input>
+                  </div>
+                  <div class="col-md-4">
+                    <ion-datetime [(ngModel)]="fuelDate" name="date" display-format="DD MMM YYYY" class="form-control"></ion-datetime>
+                  </div>
+                  <div class="col-md-4">
+                    <ion-button type="button" expand="block" color="success" (click)="recordFuelConsumption(enregistrerForm)" [disabled]="!enregistrerForm.valid">
+                      <ion-icon name="save" slot="start"></ion-icon>
+                      Enregistrer
+                    </ion-button>
+                  </div>
+                </form>
+                <div class="text-success text-center mt-2" *ngIf="isSuccess">Enregistrement réussi !</div>
+              </div>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" *ngIf="alerts.length > 0">
-                  <thead>
-                    <tr>
-                      <th>Message</th>
-                      <th>Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let alert of alerts" [class.table-danger]="!alert.read">
-                      <td>{{ alert.message }}</td>
-                      <td>{{ alert.date }}</td>
-                      <td>
-                        <button class="btn btn-sm btn-primary" (click)="markAlertAsRead(alert)">
-                          <i class="fas fa-check"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div *ngIf="alerts.length === 0" class="text-center">
-                  <h5>Aucune alerte</h5>
-                  <p class="text-muted">Tout est sous contrôle !</p>
-                </div>
+          </div>
+
+          <!-- SIGNALER ANOMALIE -->
+          <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-header bg-warning text-white">
+                <i class="fas fa-exclamation-triangle me-2"></i> Signaler une anomalie
+              </div>
+              <div class="card-body">
+                <form #anomalyForm="ngForm" class="row g-3">
+                  <div class="col-12">
+                    <ion-input type="text" [(ngModel)]="anomalyMessage" name="description" placeholder="Description" required class="form-control"></ion-input>
+                  </div>
+                  <div class="col-12">
+                    <ion-select [(ngModel)]="anomalyType" name="type" class="form-control">
+                      <ion-select-option value="Panne">Panne</ion-select-option>
+                      <ion-select-option value="Consommation inhabituelle">Consommation inhabituelle</ion-select-option>
+                    </ion-select>
+                  </div>
+                  <div class="col-12">
+                    <ion-button type="button" expand="block" color="warning" (click)="reportAnomaly(anomalyForm)" [disabled]="!anomalyMessage">
+                      <ion-icon name="warning" slot="start"></ion-icon>
+                      Signaler
+                    </ion-button>
+                  </div>
+                </form>
+                <div class="text-success text-center mt-2" *ngIf="anomalySuccess">Anomalie signalée !</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="container-fluid px-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-history me-1"></i> Historique des consommations
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" *ngIf="consumptionHistory.length > 0">
-                  <thead>
-                    <tr>
-                      <th>Quantité</th>
-                      <th>Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let record of consumptionHistory">
-                      <td>{{ record.quantity }} L</td>
-                      <td>{{ record.date }}</td>
-                      <td>
-                        <button class="btn btn-sm btn-danger" (click)="deleteRecord(record)">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div *ngIf="consumptionHistory.length === 0" class="text-center">
-                  <h5>Aucun enregistrement</h5>
-                  <p class="text-muted">Ajoutez une consommation pour voir l'historique !</p>
-                </div>
+        <!-- GRAPHIQUE -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <i class="fas fa-chart-line me-2"></i> Consommation hebdomadaire
+              </div>
+              <div class="card-body">
+                <canvas #consumptionChart height="200"></canvas>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  </ion-content>
+      </div>
+    </main>
+  </div>
+</ion-content>

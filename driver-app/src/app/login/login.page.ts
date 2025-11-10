@@ -1,3 +1,4 @@
+// src/app/login/login.page.ts
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,38 +28,29 @@ export class LoginPage {
 
   async onLogin(form: NgForm) {
     if (form.invalid) {
-      const toast = await this.toastController.create({
-        message: 'Veuillez remplir tous les champs correctement.',
-        duration: 2000,
-        color: 'danger',
-      });
-      toast.present();
+      this.showToast('Veuillez remplir tous les champs.', 'danger');
       return;
     }
 
     try {
       await this.authService.login(this.email, this.password).toPromise();
-      console.log('Connexion réussie :', this.authService.isLoggedIn());
+
       if (this.authService.isLoggedIn()) {
-        const email = this.authService.getUserEmail();
-        console.log('Redirection vers driver-dashboard pour', email);
-        await this.router.navigate(['/driver-dashboard']); // Utilisation d'await pour gérer les erreurs
-        const toast = await this.toastController.create({
-          message: 'Connexion réussie !',
-          duration: 2000,
-          color: 'success',
-        });
-        toast.present();
+        // REDIRECTION PROPRE + FORCER LE CHANGEMENT DE PAGE
+        await this.router.navigateByUrl('/driver-dashboard', { replaceUrl: true });
+        this.showToast('Connexion réussie !', 'success');
       }
     } catch (error: any) {
-      const errorMessage = error instanceof Error ? error.message : 'Email ou mot de passe incorrect. Veuillez réessayer.';
-      const toast = await this.toastController.create({
-        message: errorMessage,
-        duration: 2000,
-        color: 'danger',
-      });
-      toast.present();
-      console.error('Erreur de connexion:', error);
+      this.showToast(error.message || 'Erreur de connexion', 'danger');
     }
+  }
+
+  private async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+    });
+    toast.present();
   }
 }

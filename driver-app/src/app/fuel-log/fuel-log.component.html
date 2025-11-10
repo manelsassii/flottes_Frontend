@@ -1,0 +1,98 @@
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title color="primary">
+        Enregistrer Carburant
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form #f="ngForm" (ngSubmit)="saveFuel()">
+
+        <!-- VÉHICULE -->
+        <ion-item>
+          <ion-label position="stacked">Véhicule *</ion-label>
+          <ion-select [(ngModel)]="selectedVehicleId" name="vehicle" required>
+            <ion-select-option *ngFor="let v of vehicles" [value]="v.id">
+              {{ v.licensePlate }} ({{ v.brand }} {{ v.model }})
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- QUANTITÉ -->
+        <ion-item>
+          <ion-label position="stacked">Quantité (L) *</ion-label>
+          <ion-input 
+            type="number" 
+            [(ngModel)]="quantity" 
+            name="quantity" 
+            required 
+            min="1"
+            placeholder="Ex: 50">
+          </ion-input>
+        </ion-item>
+
+        <!-- DATE -->
+        <ion-item>
+          <ion-label position="stacked">Date *</ion-label>
+          <ion-input 
+            type="date" 
+            [(ngModel)]="refuelDate" 
+            name="date" 
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- COÛT -->
+        <ion-item>
+          <ion-label position="stacked">Coût total (optionnel)</ion-label>
+          <ion-input 
+            type="number" 
+            [(ngModel)]="cost" 
+            name="cost" 
+            step="0.01"
+            placeholder="Ex: 75.50">
+          </ion-input>
+        </ion-item>
+
+        <!-- KILOMÉTRAGE -->
+        <ion-item>
+          <ion-label position="stacked">Kilométrage (optionnel)</ion-label>
+          <ion-input 
+            type="number" 
+            [(ngModel)]="odometer" 
+            name="odometer" 
+            placeholder="Ex: 125000">
+          </ion-input>
+        </ion-item>
+
+        <!-- BOUTON -->
+        <ion-button 
+          expand="block" 
+          color="success" 
+          type="submit" 
+          [disabled]="!f.valid || !selectedVehicleId || quantity <= 0"
+          class="ion-margin-top">
+          Enregistrer
+        </ion-button>
+       
+<!-- REMPLACE (click) PAR routerLink -->
+<ion-button 
+  expand="block" 
+  fill="outline" 
+  class="ion-margin-top"
+  routerLink="/fuel-list"
+  (click)="closeMenu()">
+  Voir l'historique
+</ion-button>
+      </form>
+
+      <!-- MESSAGE -->
+      <div class="ion-text-center ion-margin-top">
+        <ion-text [color]="isSuccess ? 'success' : 'danger'" *ngIf="message">
+          <strong>{{ message }}</strong>
+        </ion-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

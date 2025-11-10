@@ -1,0 +1,67 @@
+<!-- src/app/stats/stats.page.html -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <div class="sb-nav-fixed">
+      <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+       <ion-buttons slot="start">
+  <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+</ion-buttons>
+        <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
+              <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" >
+  
+
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4 h3 text-primary">Statistiques</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+          <li class="breadcrumb-item active">Statistiques</li>
+        </ol>
+
+        <div class="row g-3 mb-4">
+          <div class="col-xl-3 col-md-6">
+            <div class="card border-left-success shadow h-100 py-3">
+              <div class="card-body text-center">
+                <div class="h5 mb-0 font-weight-bold text-success">320 L</div>
+                <div class="text-xs text-muted">Ce mois</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6">
+            <div class="card border-left-info shadow h-100 py-3">
+              <div class="card-body text-center">
+                <div class="h5 mb-0 font-weight-bold text-info">8.2 L/100km</div>
+                <div class="text-xs text-muted">Moyenne</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <i class="fas fa-chart-area me-2"></i> Consommation mensuelle
+          </div>
+          <div class="card-body">
+            <canvas #monthlyChart height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</ion-content>

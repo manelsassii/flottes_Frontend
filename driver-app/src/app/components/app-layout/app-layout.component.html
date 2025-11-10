@@ -1,0 +1,66 @@
+<!-- src/app/components/app-layout/app-layout.component.html -->
+<ion-app>
+  <!-- Header SB Admin 2 -->
+  <ion-header>
+    <ion-toolbar color="primary">
+      <div class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+          <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
+          <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" (click)="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Contenu principal -->
+  <ion-content class="ion-padding sb-sidenav-toggled" id="main-content">
+    <!-- Sidebar -->
+    <ion-menu contentId="main-content" type="overlay" side="start">
+      <ion-content>
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+            <div class="nav">
+              <a class="nav-link" routerLink="/driver-dashboard" routerLinkActive="active">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Tableau de bord
+              </a>
+              <a class="nav-link" routerLink="/stats" routerLinkActive="active">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                Statistiques
+              </a>
+              <a class="nav-link" routerLink="/alerts" routerLinkActive="active">
+                <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
+                Alertes
+              </a>
+              <a class="nav-link" routerLink="/history" routerLinkActive="active">
+                <div class="sb-nav-link-icon"><i class="fas fa-history"></i></div>
+                Historique
+              </a>
+            </div>
+          </div>
+        </nav>
+      </ion-content>
+    </ion-menu>
+
+    <!-- Contenu des pages -->
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          <ng-content></ng-content> <!-- ICI : le contenu de la page (dashboard, stats, etc.) -->
+        </div>
+      </main>
+    </div>
+  </ion-content>
+</ion-app>

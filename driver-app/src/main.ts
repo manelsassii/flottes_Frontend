@@ -1,41 +1,38 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+// src/main.ts
+import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { RouteReuseStrategy, provideRouter } from '@angular/router';
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { provideRouter, withComponentInputBinding } from '@angular/router'; // AJOUTÉ withComponentInputBinding
+import { provideHttpClient } from '@angular/common/http';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { provideHttpClient } from '@angular/common/http';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { addIcons } from 'ionicons';
-import { flame, checkmarkCircle, logOut, save, warning, trash, alertCircle } from 'ionicons/icons';
+import { 
+  speedometerOutline, barChartOutline, alertCircleOutline, 
+  timeOutline, flameOutline, listOutline 
+} from 'ionicons/icons';
+import 'zone.js'; // AJOUTÉ
 
-if (enableProdMode) {
+if (location.hostname !== 'localhost') {
   enableProdMode();
 }
 
-// Enregistrer les icônes nécessaires
 addIcons({
-  'flame': flame,
-  'checkmark-circle': checkmarkCircle,
-  'log-out': logOut,
-  'save': save,
-  'warning': warning,
-  'trash': trash,
-  'alert-circle': alertCircle
+  'speedometer-outline': speedometerOutline,
+  'bar-chart-outline': barChartOutline,
+  'alert-circle-outline': alertCircleOutline,
+  'time-outline': timeOutline,
+  'flame-outline': flameOutline,
+  'list-outline': listOutline
 });
 
-// Définir les éléments PWA après le bootstrap
-const bootstrapAndDefine = () => {
-  bootstrapApplication(AppComponent, {
-    providers: [
-      { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-      provideRouter(routes),
-      provideHttpClient(),
-      importProvidersFrom(IonicModule.forRoot({}))
-    ],
-  }).then(() => {
-    defineCustomElements(window); // Initialise les éléments PWA après le bootstrap
-  });
-};
-
-bootstrapAndDefine();
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes, withComponentInputBinding()), // AJOUTÉ
+    provideHttpClient(),
+    provideIonicAngular()
+  ]
+}).then(() => {
+  defineCustomElements();
+}).catch(err => console.error(err));

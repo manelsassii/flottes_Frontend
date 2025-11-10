@@ -1,0 +1,81 @@
+<!-- src/app/history/history.page.html -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <div class="sb-nav-fixed">
+      <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+        <ion-buttons slot="start">
+  <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+</ion-buttons>
+        <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
+              <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" >
+ 
+
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4 h3 text-primary">Historique</h1>
+        <ol class="breadcrumb mb-4">
+          <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+          <li class="breadcrumb-item active">Historique</li>
+        </ol>
+
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <i class="fas fa-history me-2"></i> Enregistrements
+          </div>
+          <div class="card-body p-0">
+            <div *ngIf="history.length === 0" class="text-center py-5 text-muted">
+              <i class="fas fa-list text-secondary" style="font-size: 48px;"></i>
+              <p class="mt-2">Aucun enregistrement</p>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Date</th>
+                    <th>Quantité</th>
+                    <th>Coût</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let record of history">
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.quantity }} L</td>
+                    <td>{{ record.cost }} DT</td>
+                    <td>
+                      <ion-button size="small" fill="clear" color="danger" (click)="deleteRecord(record)">
+                        <i class="fas fa-trash"></i>
+                      </ion-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <ion-button fill="outline" color="primary" (click)="loadMore()">
+            Voir plus
+          </ion-button>
+        </div>
+      </div>
+    </main>
+  </div>
+</ion-content>
