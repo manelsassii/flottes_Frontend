@@ -1,77 +1,122 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h4 class="mb-0">Inscription</h4>
+<div class="min-vh-100 bg-gradient d-flex align-items-center" 
+     style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+
+  <div class="container-fluid">
+    <div class="row g-0">
+
+      <!-- IMAGE AGIL À GAUCHE (50%) -->
+      <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center p-5">
+        <div class="text-center">
+          <img src="https://i.ibb.co/4pYkJ8Q/agil-horse-logo.png" 
+               alt="AGIL SNDP" 
+               class="img-fluid mb-4" 
+               style="height: 180px;">
+          <h1 class="text-white fw-bold display-4">Agil Fleet</h1>
+          <p class="text-white-50 fs-4">Système de Gestion de Flotte</p>
+          <p class="text-white-75 mt-4 lead">
+            Bienvenue dans la plateforme intelligente de la SNDP<br>
+            Gestion avancée des véhicules, ravitaillements et alertes IA
+          </p>
+          <div class="mt-5">
+            <img src="../../assets/images/sndp-logo.png" 
+                 alt="AGIL" class="opacity-25" style="height: 100px;">
+          </div>
         </div>
-        <div class="card-body">
-          <form (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
-            <div class="mb-3">
-              <label for="username" class="form-label">Nom d'utilisateur</label>
-              <input
-                type="text"
-                class="form-control"
-                id="username"
-                name="username"
-                [(ngModel)]="user.username"
-                required
-                placeholder="Entrez votre nom d'utilisateur"
-              />
-              <div class="invalid-feedback">Le nom d'utilisateur est requis.</div>
+      </div>
+
+      <!-- FORMULAIRE À DROITE (50%) -->
+      <div class="col-lg-6 d-flex align-items-center">
+        <div class="w-100 px-4 px-lg-5 py-5">
+
+          <!-- CARD DU FORMULAIRE -->
+          <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-body p-5">
+
+              <!-- Logo petit en haut du formulaire (visible sur mobile) -->
+              <div class="text-center mb-4 d-lg-none">
+                <img src="https://i.ibb.co/4pYkJ8Q/agil-horse-logo.png" 
+                     alt="AGIL" style="height: 80px;" class="mb-3">
+                <h3 class="text-primary fw-bold">Agil Fleet</h3>
+              </div>
+
+              <h2 class="text-center mb-5 fw-bold text-primary">Créer un compte</h2>
+
+              <form (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+
+                <div class="mb-4">
+                  <label class="form-label fw-semibold">
+                    <i class="fas fa-user text-primary me-2"></i> Nom d'utilisateur
+                  </label>
+                  <input type="text" class="form-control form-control-lg rounded-3"
+                         [(ngModel)]="user.username" name="username" required
+                         placeholder="Votre identifiant">
+                  <div class="invalid-feedback">Requis</div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label fw-semibold">
+                    <i class="fas fa-envelope text-primary me-2"></i> Email
+                  </label>
+                  <input type="email" class="form-control form-control-lg rounded-3"
+                         [(ngModel)]="user.email" name="email" required
+                         placeholder="votre@email.tn">
+                  <div class="invalid-feedback">Email valide requis</div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label fw-semibold">
+                    <i class="fas fa-lock text-primary me-2"></i> Mot de passe
+                  </label>
+                  <input type="password" class="form-control form-control-lg rounded-3"
+                         [(ngModel)]="user.password" name="password" required
+                         placeholder="Minimum 6 caractères">
+                  <div class="invalid-feedback">Requis</div>
+                </div>
+
+                <div class="mb-5">
+                  <label class="form-label fw-semibold">
+                    <i class="fas fa-user-tag text-primary me-2"></i> Rôle
+                  </label>
+                  <select class="form-select form-select-lg rounded-3"
+                          [(ngModel)]="user.role" name="role">
+                    <option value="ROLE_USER">Utilisateur</option>
+                    <option value="ROLE_MANAGER">Manager</option>
+                    <option value="ROLE_ADMIN">Administrateur</option>
+                  </select>
+                </div>
+
+                <button type="submit" 
+                        class="btn btn-primary btn-lg w-100 rounded-3 fw-bold shadow"
+                        style="background: linear-gradient(90deg, #0050b3, #003087); border: none;"
+                        [disabled]="isSubmitting">
+                  <span *ngIf="!isSubmitting">S'inscrire</span>
+                  <span *ngIf="isSubmitting">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Inscription...
+                  </span>
+                </button>
+
+                <div class="text-center mt-4">
+                  <p *ngIf="successMessage" class="text-success fw-bold">{{ successMessage }}</p>
+                  <p *ngIf="errorMessage" class="text-danger fw-bold">{{ errorMessage }}</p>
+                </div>
+
+                <hr class="my-4">
+                <p class="text-center text-muted">
+                  Déjà un compte ? 
+                  <a routerLink="/login" class="text-primary fw-bold text-decoration-none">
+                    Se connecter ici
+                  </a>
+                </p>
+
+              </form>
             </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                [(ngModel)]="user.email"
-                required
-                placeholder="Entrez votre email"
-              />
-              <div class="invalid-feedback">Un email valide est requis.</div>
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Mot de passe</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                [(ngModel)]="user.password"
-                required
-                placeholder="Entrez votre mot de passe"
-              />
-              <div class="invalid-feedback">Le mot de passe est requis.</div>
-            </div>
-            <div class="mb-3">
-              <label for="role" class="form-label">Rôle</label>
-              <select
-                class="form-select"
-                id="role"
-                name="role"
-                [(ngModel)]="user.role"
-              >
-                <option value="ROLE_USER">Utilisateur</option>
-                <option value="ROLE_MANAGER">Manager</option>
-                <option value="ROLE_ADMIN">Administrateur</option>
-              </select>
-            </div>
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-              [disabled]="isSubmitting"
-            >
-              {{ isSubmitting ? 'Inscription en cours...' : 'S\'inscrire' }}
-            </button>
-            <p *ngIf="successMessage" class="text-success mt-3">{{ successMessage }}</p>
-            <p *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
-          </form>
-        </div>
-        <div class="card-footer text-center">
-          <p class="mb-0">Déjà inscrit ? <a routerLink="/login" class="text-primary">Se connecter</a></p>
+          </div>
+
+          <div class="text-center mt-4 text-white">
+            <small>© 2025 SNDP – Agil Fleet System v2.0</small>
+          </div>
+
         </div>
       </div>
     </div>

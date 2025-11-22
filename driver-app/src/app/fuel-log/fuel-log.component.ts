@@ -3,14 +3,17 @@ import { Component, OnInit } from '@angular/core';
 import { FuelService, FuelEntry } from '../services/fuel';
 import { VehicleService } from '../services/vehicle';
 import { Vehicle } from '../models/vehicle';
+import { AuthService } from '../services/auth.service'; // AJOUTÉ
+import { Router } from '@angular/router'; // AJOUTÉ
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-fuel-log',
   templateUrl: './fuel-log.component.html',
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule] // AJOUTÉ RouterLink
+  imports: [IonicModule, FormsModule, CommonModule]
 })
 export class FuelLogComponent implements OnInit {
   quantity = 0;
@@ -26,6 +29,8 @@ export class FuelLogComponent implements OnInit {
   constructor(
     private fuelService: FuelService,
     private vehicleService: VehicleService,
+    public authService: AuthService, // AJOUTÉ + public
+    private router: Router // AJOUTÉ
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +73,9 @@ export class FuelLogComponent implements OnInit {
         this.isSuccess = true;
         this.message = 'Enregistré avec succès !';
         this.resetForm();
+
+        // AJOUTE UNE ALERTE APRÈS SUCCÈS
+        this.fuelService.addAlert('Ravitaillement enregistré avec succès !');
       },
       error: (err: any) => {
         this.message = 'Erreur : ' + (err.error?.message || 'Données invalides');
@@ -86,7 +94,12 @@ export class FuelLogComponent implements OnInit {
   }
 
   closeMenu() {
-  const menu = document.querySelector('ion-menu');
-  if (menu) menu.close();
-}
+    const menu = document.querySelector('ion-menu');
+    if (menu) menu.close();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

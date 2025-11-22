@@ -1,8 +1,8 @@
-// src/app/services/fuel.ts
+// src/app/services/fuel.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators'; // AJOUTÉ ICI
+import { tap } from 'rxjs/operators';
 
 export interface FuelEntry {
   id?: number;
@@ -22,11 +22,9 @@ export interface Vehicle {
   fuelType: string;
 }
 
-// Alerte générée localement
 export interface LocalAlert {
   message: string;
   date: string;
-  type: 'odometer' | 'consumption';
   read: boolean;
 }
 
@@ -34,31 +32,38 @@ export interface LocalAlert {
 export class FuelService {
   private apiUrl = '/api/fuel-consumptions';
   private vehicleUrl = '/api/vehicles';
+  private anomalyUrl = '/api/anomalies'; // Endpoint anomalies
 
-  // Stockage local des alertes
   private alertsSubject = new BehaviorSubject<LocalAlert[]>([]);
   alerts$ = this.alertsSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    this.loadAlertsFromStorage();
+    this.loadFromStorage();
   }
 
+  // ENREGISTREMENT CARBURANT
   saveFuel(entry: FuelEntry): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, entry).pipe(
-      tap(() => {
-        this.checkAnomalies(entry);
-      })
+      tap(() => this.checkAnomalies(entry))
     );
   }
 
+  // LISTE TOUS LES RAVITAILLEMENTS
   getAllFuel(): Observable<FuelEntry[]> {
     return this.http.get<FuelEntry[]>(this.apiUrl);
   }
 
+  // LISTE VÉHICULES
   getVehicles(): Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(this.vehicleUrl);
   }
 
+  // SIGNALER UNE ANOMALIE (MÉTHODE PUBLIQUE)
+  reportAnomaly(payload: any): Observable<any> {
+    return this.http.post(`${this.anomalyUrl}/report`, payload);
+  }
+
+  // DÉTECTION ANOMALIES
   private checkAnomalies(newEntry: FuelEntry) {
     if (!newEntry.odometerReading || newEntry.odometerReading <= 0) return;
 
@@ -69,66 +74,51 @@ export class FuelService {
 
       const prev = vehicleEntries[1];
 
-      // 1. ODOMÈTRE DÉCROISSANT
       if (prev && newEntry.odometerReading! < prev.odometerReading!) {
-        this.addLocalAlert(
-          `Odomètre décroissant : ${newEntry.odometerReading} < ${prev.odometerReading}`,
-          newEntry.refuelDate,
-          'odometer'
-        );
+        this.addAlert(`Odomètre décroissant : ${newEntry.odometerReading} < ${prev.odometerReading}`);
       }
 
-      // 2. CONSOMMATION ANORMALE
       if (prev && prev.odometerReading) {
         const km = newEntry.odometerReading! - prev.odometerReading!;
         if (km > 0) {
           const consumption = (newEntry.quantity / km) * 100;
           if (consumption > 20) {
-            this.addLocalAlert(
-              `Consommation anormale : ${consumption.toFixed(1)} L/100km`,
-              newEntry.refuelDate,
-              'consumption'
-            );
+            this.addAlert(`Consommation anormale : ${consumption.toFixed(1)} L/100km`);
           }
         }
       }
     });
   }
 
-  // AJOUTE UNE ALERTE LOCALEMENT
-  private addLocalAlert(message: string, date: string, type: 'odometer' | 'consumption') {
+  // AJOUTER ALERTE
+  addAlert(message: string) {
     const newAlert: LocalAlert = {
       message,
-      date: date.split('T')[0],
-      type,
+      date: new Date().toISOString().split('T')[0],
       read: false
     };
-
     const current = this.alertsSubject.value;
-    const updated = [newAlert, ...current];
-    this.alertsSubject.next(updated);
-    this.saveAlertsToStorage(updated);
+    this.alertsSubject.next([newAlert, ...current]);
+    this.saveToStorage();
   }
 
-  // MARQUER COMME LU
+  // MARQUER COMME LUE
   markAsRead(index: number) {
     const alerts = [...this.alertsSubject.value];
     if (alerts[index]) {
       alerts[index].read = true;
       this.alertsSubject.next(alerts);
-      this.saveAlertsToStorage(alerts);
+      this.saveToStorage();
     }
   }
 
-  // CHARGER / SAUVEGARDER DANS localStorage
-  private saveAlertsToStorage(alerts: LocalAlert[]) {
-    localStorage.setItem('agilfleet-alerts', JSON.stringify(alerts));
+  // SAUVEGARDE LOCAL
+  private saveToStorage() {
+    localStorage.setItem('agilfleet-alerts', JSON.stringify(this.alertsSubject.value));
   }
 
-  private loadAlertsFromStorage() {
+  private loadFromStorage() {
     const data = localStorage.getItem('agilfleet-alerts');
-    if (data) {
-      this.alertsSubject.next(JSON.parse(data));
-    }
+    if (data) this.alertsSubject.next(JSON.parse(data));
   }
 }

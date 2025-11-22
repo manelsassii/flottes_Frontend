@@ -1,0 +1,33 @@
+<!-- src/app/components/chatbot/chatbot.component.html -->
+<div class="chatbot-container">
+  <div class="chatbot-header" (click)="toggleChat()">
+    <ion-icon name="chatbubble-ellipses-outline" class="me-2"></ion-icon>
+    <span>Assistant IA</span>
+    <ion-icon name="chevron-down-outline" class="ms-auto" [class.rotate]="isOpen"></ion-icon>
+  </div>
+
+  <div class="chatbot-body" *ngIf="isOpen">
+    <div #chatMessages class="messages">
+      <div *ngFor="let msg of messages" [class.bot]="msg.sender === 'bot'" [class.user]="msg.sender === 'user'" class="message">
+        <div class="bubble">{{ msg.text }}</div>
+        <small class="time">{{ msg.time }}</small>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <ion-input 
+        [(ngModel)]="userMessage" 
+        placeholder="Posez une question..." 
+        (keyup.enter)="sendMessage()"
+        class="message-input">
+      </ion-input>
+      <ion-button 
+        type="button" 
+        fill="clear" 
+        (click)="sendMessage()" 
+        [disabled]="!userMessage.trim()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</div>

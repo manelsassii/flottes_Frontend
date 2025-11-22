@@ -1,32 +1,89 @@
+<!-- src/app/fuel-list/fuel-list.component.html -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <div class="sb-nav-fixed">
+      <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+        <ion-buttons slot="start">
+          <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+        </ion-buttons>
+        <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
+              <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
-  <ion-refresher slot="fixed" (ionRefresh)="loadData()">
+  <!-- REFRESHER -->
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Historique Carburant</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-list *ngIf="!loading && fuelEntries.length > 0">
-        <ion-item *ngFor="let entry of fuelEntries">
-          <ion-label>
-            <h2>{{ entry.displayName }}</h2>
-            <p>{{ entry.refuelDate | date:'dd/MM/yyyy' }}</p>
-            <p><strong>{{ entry.quantity }} L</strong> — {{ entry.cost || 0 }} DT</p>
-            <p>Km: {{ entry.odometerReading || 'N/A' }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-
-      <div *ngIf="loading" class="ion-text-center">
-        <ion-spinner></ion-spinner>
+  <!-- TABLEAU -->
+  <div class="container-fluid px-0">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">
+          Historique Carburant
+        </h5>
       </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">Véhicule</th>
+                <th>Date</th>
+                <th class="text-center">Quantité</th>
+                <th class="text-end">Coût</th>
+                <th class="text-end pe-3">Km</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of fuelEntries">
+                <td class="ps-3">
+                  <strong>{{ entry.displayName }}</strong>
+                </td>
+                <td>
+                  <span class="text-muted">{{ entry.refuelDate | date:'dd/MM/yyyy' }}</span>
+                </td>
+                <td class="text-center">
+                  <ion-badge color="primary" class="px-3 py-1">
+                    {{ entry.quantity }} L
+                  </ion-badge>
+                </td>
+                <td class="text-end font-monospace">
+                  {{ entry.cost || 0 }} DT
+                </td>
+                <td class="text-end pe-3 text-muted">
+                  {{ entry.odometerReading || 'N/A' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <div *ngIf="!loading && fuelEntries.length === 0" class="ion-text-center">
-        <p>Aucune consommation enregistrée</p>
+        <!-- ÉTAT VIDE -->
+        <div *ngIf="!loading && fuelEntries.length === 0" class="text-center py-5">
+          <ion-icon name="car-outline" size="large" class="text-muted mb-3" style="font-size: 48px;"></ion-icon>
+          <p class="text-muted">Aucune consommation enregistrée</p>
+        </div>
+
+        <!-- CHARGEMENT -->
+        <div *ngIf="loading" class="text-center py-5">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p class="text-muted mt-2">Chargement...</p>
+        </div>
       </div>
-    </ion-card-content>
-  </ion-card>
+    </div>
+  </div>
 </ion-content>

@@ -33,7 +33,12 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              {
+    "glob": "**/*",
+    "input": "src/assets/models",
+    "output": "assets/models"
+  }
             ],
             "styles": [
               "src/styles.scss",

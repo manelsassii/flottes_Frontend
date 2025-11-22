@@ -1,6 +1,8 @@
 // src/app/fuel-list/fuel-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FuelService, FuelEntry, Vehicle } from '../services/fuel';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 
@@ -8,7 +10,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-fuel-list',
   templateUrl: './fuel-list.component.html',
   standalone: true,
-  imports: [IonicModule, CommonModule], // AJOUTÉ RouterLink
+  imports: [IonicModule, CommonModule]
 })
 export class FuelListComponent implements OnInit {
   fuelEntries: (FuelEntry & { displayName?: string })[] = [];
@@ -16,16 +18,19 @@ export class FuelListComponent implements OnInit {
 
   private vehiclesMap = new Map<number, Vehicle>();
 
-  constructor(private fuelService: FuelService) {}
+  constructor(
+    private fuelService: FuelService,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData(): void {
+  loadData(event?: any): void {
     this.loading = true;
 
-    // 1. CHARGE LES VÉHICULES
     this.fuelService.getVehicles().subscribe({
       next: (vehicles) => {
         vehicles.forEach(v => this.vehiclesMap.set(v.id, v));
@@ -33,12 +38,12 @@ export class FuelListComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.completeRefresh(event);
       }
     });
   }
 
-  loadFuelEntries(): void {
-    // 2. CHARGE LES CONSOMMATIONS
+  private loadFuelEntries(): void {
     this.fuelService.getAllFuel().subscribe({
       next: (entries) => {
         this.fuelEntries = entries.map(entry => {
@@ -52,7 +57,19 @@ export class FuelListComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-      }
+      },
+      complete: () => this.completeRefresh()
     });
+  }
+
+  private completeRefresh(event?: any) {
+    if (event) {
+      event.target.complete();
+    }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

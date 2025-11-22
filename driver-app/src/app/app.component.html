@@ -18,9 +18,12 @@
           <ion-label>Statistiques</ion-label>
         </ion-item>
         <ion-item routerLink="/alerts" lines="none" (click)="closeMenu()">
-          <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
-          <ion-label>Alertes</ion-label>
-        </ion-item>
+  <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+  <ion-label>Alertes</ion-label>
+  <ion-badge slot="end" color="danger" *ngIf="unreadCount > 0">
+    {{ unreadCount }}
+  </ion-badge>
+</ion-item>
         <ion-item routerLink="/history" lines="none" (click)="closeMenu()">
           <ion-icon name="time-outline" slot="start"></ion-icon>
           <ion-label>Historique</ion-label>
@@ -34,8 +37,10 @@
           <ion-label>Historique Carburant</ion-label>
         </ion-item>
       </ion-list>
+      
     </ion-content>
   </ion-menu>
+ 
 
   <!-- CONTENU PRINCIPAL -->
   <ion-router-outlet id="main-content"></ion-router-outlet>

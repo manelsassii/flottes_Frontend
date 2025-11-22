@@ -202,33 +202,84 @@
         </div>
       </div>
 
-      <!-- Fuel Consumption Prediction -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Prédiction de consommation</h6>
-        </div>
-        <div class="card-body">
-          <form>
-            <div class="form-group">
-              <label for="fuelType">Type de carburant</label>
-              <select id="fuelType" [(ngModel)]="fuelType" name="fuelType" class="form-control">
-                <option value="Essence">Essence</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Électrique">Électrique</option>
-                <option value="Hybride">Hybride</option>
-              </select>
+    <!-- PRÉDICTION IA PYTHON AVANCÉE (PAR VÉHICULE) -->
+<div class="card mt-4 border-0 shadow">
+  <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <h5 class="mb-0">
+      <i class="fas fa-robot me-2"></i> IA Python – Prédiction Intelligente par Véhicule
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="row align-items-end">
+      <div class="col-md-5">
+        <label class="form-label fw-bold">ID du véhicule</label>
+        <input 
+          [(ngModel)]="selectedVehicleId" 
+          type="number" 
+          class="form-control form-control-lg" 
+          placeholder="Ex: 3"
+          min="1">
+      </div>
+      <div class="col-md-4">
+        <button 
+          class="btn btn-lg btn-danger w-100" 
+          (click)="launchPythonPrediction()"
+          [disabled]="!selectedVehicleId || isLoadingPython">
+          <span *ngIf="!isLoadingPython">Prédire</span>
+          <span *ngIf="isLoadingPython">
+            <span class="spinner-border spinner-border-sm"></span> Analyse en cours...
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Résultat IA -->
+    <div *ngIf="pythonPrediction" class="mt-4 p-4 rounded border" 
+         [class.bg-light]="!pythonPrediction.error && !pythonPrediction.anomaly_detected"
+         [class.bg-danger]="pythonPrediction.anomaly_detected"
+         [class.bg-warning]="pythonPrediction.error">
+      
+      <h5 class="text-center mb-3">
+        <i class="fas fa-brain"></i> Rapport IA pour le véhicule {{ selectedVehicleId }}
+      </h5>
+
+      <div *ngIf="pythonPrediction.error" class="text-white text-center">
+        <strong>Erreur :</strong> {{ pythonPrediction.error }}
+      </div>
+
+      <div *ngIf="!pythonPrediction.error" class="text-dark">
+        <div class="row text-center">
+          <div class="col-md-4">
+            <div class="p-3 bg-primary text-white rounded">
+              <h6>Conso moyenne</h6>
+              <h4>{{ pythonPrediction.average_consumption_l100km }} L/100km</h4>
             </div>
-            <div class="form-group">
-              <label for="distanceKm">Distance (km)</label>
-              <input id="distanceKm" [(ngModel)]="distanceKm" name="distanceKm" type="number" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 bg-success text-white rounded">
+              <h6>Prochain plein</h6>
+              <h4>{{ pythonPrediction.next_refuel_liters }} L</h4>
             </div>
-            <button type="button" class="btn btn-primary" (click)="predictConsumption()">Prédire</button>
-          </form>
-          <div *ngIf="predictedConsumption !== null" class="mt-3">
-            <p class="text-success">Consommation prévue : {{ predictedConsumption | number:'1.2-2' }} {{ fuelType === 'Électrique' ? 'kWh' : 'litres' }} pour {{ distanceKm }} km</p>
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 bg-info text-white rounded">
+              <h6>Date estimée</h6>
+              <h5>{{ pythonPrediction.next_refuel_date }}</h5>
+            </div>
           </div>
         </div>
+
+        <div *ngIf="pythonPrediction.anomaly_detected" class="alert alert-danger mt-4 text-center">
+          <h4><i class="fas fa-exclamation-triangle"></i> ANOMALIE DÉTECTÉE !</h4>
+          <p class="mb-0">{{ pythonPrediction.anomaly_message }}</p>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <strong>Recommandation IA :</strong><br>
+          {{ pythonPrediction.recommendation }}
+        </div>
       </div>
-    </main>
+    </div>
   </div>
 </div>
+    

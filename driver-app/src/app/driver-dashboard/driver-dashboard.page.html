@@ -22,124 +22,163 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" >
+<ion-content class="ion-padding">
+  <div class="container-fluid px-4">
+    <h1 class="mt-4 h3 text-primary">Tableau de bord</h1>
+    <ol class="breadcrumb mb-4"><li class="breadcrumb-item active">Dashboard</li></ol>
 
- 
-
-  <!-- CONTENU DASHBOARD -->
-  <div id="layoutSidenav_content">
-    <main>
-      <div class="container-fluid px-4">
-        <h1 class="mt-4 h3 text-primary">Tableau de bord</h1>
-        <ol class="breadcrumb mb-4">
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-
-        <!-- CARTES RAPIDES -->
-        <div class="row g-3 mb-5">
-          <div class="col-xl-3 col-lg-6 col-md-6">
-            <div class="card border-left-primary shadow h-100">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Consommation récente</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">50 L</div>
-                  </div>
-                  <div class="col-auto">
-                    <ion-icon name="flame" class="text-primary" size="large"></ion-icon>
-                  </div>
-                </div>
+    <!-- CARTES RAPIDES -->
+    <div class="row g-3 mb-4">
+      <div class="col-xl-3 col-lg-6">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Consommation récente</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ consumptionHistory[0]?.quantity || 0 }} L</div>
               </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-6 col-md-6">
-            <div class="card border-left-warning shadow h-100">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Statut du véhicule</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">Alerte</div>
-                  </div>
-                  <div class="col-auto">
-                    <ion-icon name="warning" class="text-warning" size="large"></ion-icon>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ENREGISTREMENT RAPIDE -->
-        <div class="row">
-          <div class="col-lg-8 mb-4">
-            <div class="card shadow-sm">
-              <div class="card-header bg-success text-white">
-                <i class="fas fa-gas-pump me-2"></i> Enregistrement rapide
-              </div>
-              <div class="card-body">
-                <form #enregistrerForm="ngForm" class="row g-3">
-                  <div class="col-md-4">
-                    <ion-input type="number" [(ngModel)]="fuelQuantity" name="quantity" required min="1" placeholder="Quantité (L)" class="form-control"></ion-input>
-                  </div>
-                  <div class="col-md-4">
-                    <ion-datetime [(ngModel)]="fuelDate" name="date" display-format="DD MMM YYYY" class="form-control"></ion-datetime>
-                  </div>
-                  <div class="col-md-4">
-                    <ion-button type="button" expand="block" color="success" (click)="recordFuelConsumption(enregistrerForm)" [disabled]="!enregistrerForm.valid">
-                      <ion-icon name="save" slot="start"></ion-icon>
-                      Enregistrer
-                    </ion-button>
-                  </div>
-                </form>
-                <div class="text-success text-center mt-2" *ngIf="isSuccess">Enregistrement réussi !</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SIGNALER ANOMALIE -->
-          <div class="col-lg-4 mb-4">
-            <div class="card shadow-sm">
-              <div class="card-header bg-warning text-white">
-                <i class="fas fa-exclamation-triangle me-2"></i> Signaler une anomalie
-              </div>
-              <div class="card-body">
-                <form #anomalyForm="ngForm" class="row g-3">
-                  <div class="col-12">
-                    <ion-input type="text" [(ngModel)]="anomalyMessage" name="description" placeholder="Description" required class="form-control"></ion-input>
-                  </div>
-                  <div class="col-12">
-                    <ion-select [(ngModel)]="anomalyType" name="type" class="form-control">
-                      <ion-select-option value="Panne">Panne</ion-select-option>
-                      <ion-select-option value="Consommation inhabituelle">Consommation inhabituelle</ion-select-option>
-                    </ion-select>
-                  </div>
-                  <div class="col-12">
-                    <ion-button type="button" expand="block" color="warning" (click)="reportAnomaly(anomalyForm)" [disabled]="!anomalyMessage">
-                      <ion-icon name="warning" slot="start"></ion-icon>
-                      Signaler
-                    </ion-button>
-                  </div>
-                </form>
-                <div class="text-success text-center mt-2" *ngIf="anomalySuccess">Anomalie signalée !</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- GRAPHIQUE -->
-        <div class="row">
-          <div class="col-12">
-            <div class="card shadow-sm">
-              <div class="card-header">
-                <i class="fas fa-chart-line me-2"></i> Consommation hebdomadaire
-              </div>
-              <div class="card-body">
-                <canvas #consumptionChart height="200"></canvas>
+              <div class="col-auto">
+                <ion-icon name="flame" size="large" class="text-primary"></ion-icon>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </main>
+      <div class="col-xl-3 col-lg-6">
+        <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Alertes</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ alerts.length }}</div>
+              </div>
+              <div class="col-auto">
+                <ion-icon name="warning" size="large" class="text-warning"></ion-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENREGISTREMENT + ANOMALIE -->
+    <div class="row">
+      <!-- ENREGISTREMENT RAPIDE -->
+      <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-success text-white">Enregistrement rapide</div>
+          <div class="card-body">
+            <form #enregistrerForm="ngForm" (ngSubmit)="recordFuelConsumption(enregistrerForm)">
+              <table class="table table-borderless mb-0">
+                <tr>
+                  <td class="text-end pe-3" style="width: 30%;"><strong>Véhicule *</strong></td>
+                  <td>
+                    <ion-select [(ngModel)]="selectedVehicleId" name="vehicle" required class="form-control">
+                      <ion-select-option *ngFor="let v of vehicles" [value]="v.id">
+                        {{ v.licensePlate }} ({{ v.brand }} {{ v.model }})
+                      </ion-select-option>
+                    </ion-select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-end pe-3"><strong>Quantité (L) *</strong></td>
+                  <td>
+                    <ion-input type="number" [(ngModel)]="quantity" name="quantity" required min="1" placeholder="50" class="form-control"></ion-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-end pe-3"><strong>Date *</strong></td>
+                  <td>
+                    <ion-input type="date" [(ngModel)]="refuelDate" name="date" required class="form-control"></ion-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-end pe-3"><strong>Coût (optionnel)</strong></td>
+                  <td>
+                    <ion-input type="number" [(ngModel)]="cost" name="cost" step="0.01" placeholder="75.50" class="form-control"></ion-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-end pe-3"><strong>Kilométrage (optionnel)</strong></td>
+                  <td>
+                    <ion-input type="number" [(ngModel)]="odometer" name="odometer" placeholder="125000" class="form-control"></ion-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="text-center">
+                    <ion-button type="submit" expand="block" color="success" 
+                      [disabled]="!enregistrerForm.valid || !selectedVehicleId || quantity <= 0">
+                      Enregistrer
+                    </ion-button>
+                  </td>
+                </tr>
+              </table>
+              <div class="text-success text-center mt-3" *ngIf="isSuccess">
+                {{ fuelMessage }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNALER ANOMALIE -->
+      <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-warning text-white">Signaler une anomalie</div>
+          <div class="card-body">
+            <form #anomalyForm="ngForm" (ngSubmit)="reportAnomaly(anomalyForm)">
+              <table class="table table-borderless mb-0">
+                <tr>
+                  <td class="text-end pe-3" style="width: 40%;"><strong>Description *</strong></td>
+                  <td>
+                    <ion-input 
+                      type="text" 
+                      [(ngModel)]="anomalyMessageInput" 
+                      name="desc" 
+                      required 
+                      placeholder="Fuite d'huile" 
+                      class="form-control">
+                    </ion-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-end pe-3"><strong>Type</strong></td>
+                  <td>
+                    <ion-select [(ngModel)]="anomalyType" name="type" class="form-control">
+                      <ion-select-option value="Panne">Panne</ion-select-option>
+                      <ion-select-option value="Consommation">Consommation</ion-select-option>
+                      <ion-select-option value="Autre">Autre</ion-select-option>
+                    </ion-select>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="text-center">
+                    <ion-button 
+                      type="submit" 
+                      expand="block" 
+                      color="warning" 
+                      [disabled]="!anomalyForm.valid">
+                      Signaler
+                    </ion-button>
+                  </td>
+                </tr>
+              </table>
+              <div class="text-success text-center mt-3" *ngIf="anomalySuccess">
+                {{ anomalyMessage }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUE -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header">Consommation hebdomadaire</div>
+      <div class="card-body">
+        <canvas #consumptionChart height="220"></canvas>
+      </div>
+    </div>
   </div>
+  <app-chatbot></app-chatbot>
 </ion-content>

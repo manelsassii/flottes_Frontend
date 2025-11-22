@@ -1,54 +1,57 @@
+<!-- src/app/login/login.page.html -->
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Connexion Conducteur</ion-title>
+    <ion-title>Connexion</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding background-gradient">
-  <div class="login-container">
+<ion-content class="login-content">
+  <div class="main-container">
     <ion-card class="login-card">
-      <ion-card-header>
-        <ion-card-title class="text-center">Bienvenue</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
+      <ion-card-content class="card-content">
+
+        <div class="header-section">
+          <img src="assets/images/truck-login.jpg" alt="Agil Fleet" class="logo-img" />
+          <div class="title-group">
+            <h1 class="app-title">Agil Fleet</h1>
+            <p class="app-subtitle">Conducteur</p>
+          </div>
+        </div>
+
         <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
-          <ion-item lines="full" class="rounded-input">
-            <ion-label position="floating">Email</ion-label>
-            <ion-input
-              type="email"
-              [(ngModel)]="email"
-              name="email"
-              required
-              email
-              placeholder="Entrez votre email"
-            ></ion-input>
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="email" name="email" required email placeholder="exemple@agilfleet.com"></ion-input>
           </ion-item>
-          <ion-item lines="full" class="rounded-input">
-            <ion-label position="floating">Mot de passe</ion-label>
-            <ion-input
-              type="password"
-              [(ngModel)]="password"
-              name="password"
-              required
-              placeholder="Entrez votre mot de passe"
-            ></ion-input>
+
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-label position="stacked">Mot de passe</ion-label>
+            <ion-input type="password" [(ngModel)]="password" name="password" required placeholder="••••••••"></ion-input>
           </ion-item>
-          <ion-button
-            expand="block"
-            type="submit"
-            [disabled]="loginForm.invalid"
-            class="custom-button"
-          >
+
+          <ion-button expand="block" type="submit" [disabled]="loginForm.invalid" class="login-btn">
             Se connecter
           </ion-button>
-          <p class="ion-text-center ion-margin-top">
-            <a routerLink="/forgot-password" class="forgot-password">Mot de passe oublié ?</a>
-          </p>
         </form>
+
+        <div class="text-center my-4">
+          <span class="bg-white px-4 text-muted">ou</span>
+          <hr class="mt-3">
+        </div>
+
+        <ion-button expand="block" fill="outline" color="tertiary" (click)="loginWithFace()" class="face-btn">
+          Connexion par reconnaissance faciale
+        </ion-button>
+
+        <div class="footer-links">
+          <a routerLink="/forgot-password" class="link-forgot">Mot de passe oublié ?</a>
+          <p class="register-text">
+            Pas de compte ? <a routerLink="/register" class="link-register">S'inscrire</a>
+          </p>
+        </div>
       </ion-card-content>
     </ion-card>
-    <p class="text-center ion-margin-top footer-text">
-      Pas encore de compte ? <a routerLink="/register">Inscrivez-vous</a>
-    </p>
   </div>
 </ion-content>

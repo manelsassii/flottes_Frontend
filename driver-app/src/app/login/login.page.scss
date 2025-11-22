@@ -1,59 +1,181 @@
-.background-gradient {
-  background: linear-gradient(135deg, #4a90e2, #9013fe);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* src/app/login/login.page.scss */
+.login-content {
+  --background: linear-gradient(135deg, #667eea, #764ba2);
+  height: 100vh;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
-.login-container {
-  width: 100%;
-  max-width: 400px;
+/* CONTENEUR PRINCIPAL */
+.main-container {
+  max-width: 420px;
+  margin: 0 auto;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .login-card {
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 28px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
 
-.rounded-input ion-item {
-  --border-radius: 10px;
-  --background: rgba(255, 255, 255, 0.9);
-  margin-bottom: 15px;
+.card-content {
+  padding: 40px 32px;
 }
 
-.custom-button {
-  --background: #ff5722;
-  --background-hover: #e64a19;
-  --background-activated: #d84315;
-  --border-radius: 10px;
-  height: 50px;
-  font-size: 16px;
-  font-weight: 500;
-  margin-top: 10px;
+/* LOGO + TITRE À GAUCHE */
+.header-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 35px;
 }
 
-.forgot-password {
-  color: #ff5722;
+.logo-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin-right: 20px;
+}
+
+.title-group {
+  h1 {
+    color: #1a1a1a;
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.8px;
+  }
+  p {
+    color: #666;
+    font-size: 1.05rem;
+    margin: 4px 0 0;
+    font-weight: 600;
+  }
+}
+
+/* CHAMPS AVEC ICÔNE + ESPACE */
+.input-item {
+  margin-bottom: 32px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f0f4f8;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  height: 74px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+  }
+
+  /* ICÔNE À GAUCHE */
+  .field-icon {
+    color: #667eea;
+    font-size: 24px;
+    margin: 0 16px 0 20px;
+  }
+
+  /* LABEL AVEC ICÔNE */
+  .stacked-label {
+    display: flex;
+    align-items: center;
+    font-weight: 700 !important;
+    color: #2c3e50 !important;
+    font-size: 14px !important;
+    margin-left: 52px;
+    margin-bottom: 8px;
+
+    .label-icon {
+      color: #667eea;
+      font-size: 18px;
+      margin-right: 8px;
+    }
+  }
+
+  /* INPUT AVEC ESPACE */
+  .spaced-input {
+    --padding-start: 52px;
+    --padding-end: 20px;
+    --padding-top: 12px;
+    font-size: 16px;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+}
+
+/* BOUTON */
+.login-btn {
+  --border-radius: 18px;
+  --background: linear-gradient(135deg, #ff6b6b, #f44336);
+  --background-hover: linear-gradient(135deg, #f44336, #d32f2f);
+  --box-shadow: 0 12px 28px rgba(244, 67, 54, 0.5);
+  height: 60px;
+  font-weight: 700;
+  font-size: 18px;
+  margin: 30px 0 20px;
+  text-transform: none;
+  letter-spacing: 1px;
+
+  ion-icon {
+    margin-right: 8px;
+  }
+
+  &:active {
+    transform: translateY(3px);
+  }
+}
+
+/* LIENS */
+.footer-links {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.link-forgot {
+  display: block;
+  color: #667eea;
+  font-size: 14.5px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 14px;
 }
 
-.forgot-password:hover {
-  text-decoration: underline;
+.register-text {
+  color: #7f8c8d;
+  font-size: 14.5px;
+  margin: 0;
 }
 
-.footer-text {
-  color: #fff;
-  font-size: 14px;
+.link-register {
+  color: #ff9800;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.footer-text a {
-  color: #ffeb3b;
-  font-weight: 500;
+/* SCROLL SI BESOIN */
+ion-content {
+  --overflow: auto;
 }
 
-.footer-text a:hover {
-  text-decoration: underline;
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* PC */
+@media (min-width: 768px) {
+  .main-container { max-width: 450px; }
+  .card-content { padding: 50px 40px; }
+  .logo-img { width: 90px; height: 90px; }
+}
+.face-btn {
+  --border-radius: 18px;
+  height: 56px;
+  font-weight: 600;
+  margin-top: 10px;
 }

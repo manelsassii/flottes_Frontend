@@ -1,3 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <div class="sb-nav-fixed">
+      <nav class="sb-topnav navbar navbar-expand navbar-dark bg-primary">
+        <ion-buttons slot="start">
+          <ion-menu-button menu="main-menu" autoHide="false"></ion-menu-button>
+        </ion-buttons>
+        <a class="navbar-brand ps-3" href="#">Agil Fleet</a>
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown">
+              <i class="fas fa-user fa-fw"></i> {{ authService.getUserEmail() || 'Conducteur' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" (click)="logout()">Déconnexion</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
   <ion-card>
     <ion-card-header class="ion-text-center">

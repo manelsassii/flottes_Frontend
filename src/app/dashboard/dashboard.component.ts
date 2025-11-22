@@ -56,6 +56,9 @@ export class DashboardComponent implements OnInit {
   totalConsumption: number = 0;
   systemStatus: string | null = null;
   systemLogs: string[] = [];
+  selectedVehicleId: number = 1;
+pythonPrediction: any = null;
+isLoadingPython = false;
 
   constructor(
     private authService: AuthService,
@@ -299,6 +302,37 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
     });
   }
+  launchPythonPrediction() {
+  if (!this.selectedVehicleId || this.selectedVehicleId <= 0) {
+    this.toastr.error('Veuillez entrer un ID de véhicule valide');
+    return;
+  }
+
+  this.isLoadingPython = true;
+  this.pythonPrediction = null;
+
+  this.http.get<any>(`http://localhost:8081/api/fuel-consumptions/python-predict/${this.selectedVehicleId}`)
+    .subscribe({
+      next: (result) => {
+        this.pythonPrediction = result;
+        this.isLoadingPython = false;
+
+        if (result.error) {
+          this.toastr.error('IA Python : ' + result.error);
+        } else if (result.anomaly_detected) {
+          this.toastr.warning('Anomalie détectée sur le véhicule ' + this.selectedVehicleId);
+        } else {
+          this.toastr.success('Prédiction IA réussie pour le véhicule ' + this.selectedVehicleId);
+        }
+      },
+      error: (err) => {
+        this.isLoadingPython = false;
+        this.pythonPrediction = { error: "Impossible de contacter l'IA Python (vérifiez le backend)" };
+        this.toastr.error('Erreur de connexion à l\'IA');
+        console.error(err);
+      }
+    });
+}
 
   // Gestion des erreurs
   private handleError(err: HttpErrorResponse, defaultMessage: string): void {

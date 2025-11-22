@@ -1,0 +1,104 @@
+/* src/app/components/chatbot/chatbot.component.scss */
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  max-width: 90vw;
+  z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chatbot-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &:hover { background: linear-gradient(135deg, #0056b3, #004085); }
+
+  ion-icon { font-size: 20px; }
+  .rotate { transform: rotate(180deg); transition: 0.3s; }
+}
+
+.chatbot-body {
+  background: white;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  max-height: 70vh;
+}
+
+.messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+
+  .message {
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+
+    &.bot { align-self: flex-start; }
+    &.user { align-self: flex-end; }
+
+    .bubble {
+      background: #e9ecef;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      margin-bottom: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    &.user .bubble {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+    }
+
+    .time {
+      font-size: 10px;
+      color: #6c757d;
+      &.bot { align-self: flex-start; }
+      &.user { align-self: flex-end; }
+    }
+  }
+}
+
+.input-area {
+  display: flex;
+  padding: 12px;
+  background: white;
+  border-top: 1px solid #dee2e6;
+  gap: 8px;
+
+  .message-input {
+    flex: 1;
+    --padding-start: 16px;
+    --background: #f1f3f5;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  ion-button {
+    --padding-start: 0;
+    --padding-end: 0;
+    width: 40px;
+    height: 40px;
+    ion-icon { font-size: 18px; color: #007bff; }
+  }
+}
